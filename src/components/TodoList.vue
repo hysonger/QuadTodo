@@ -65,9 +65,9 @@ const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?
     <template #footer>
       <div
         v-if="todos.length === 0"
-        class="flex-1 flex items-center justify-center text-gray-400 text-sm py-8 border-2 border-dashed border-gray-200 rounded-lg"
+        class="flex-1 flex items-center justify-center text-gray-300 text-xs py-4 border border-dashed border-gray-200 rounded"
       >
-        拖拽或点击添加待办事项
+        拖拽或点击添加
       </div>
     </template>
   </draggable>

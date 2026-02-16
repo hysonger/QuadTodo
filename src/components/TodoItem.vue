@@ -43,7 +43,6 @@ const startEditing = () => {
 const saveEdit = () => {
   const trimmed = editContent.value.trim()
   if (trimmed === '') {
-    // Empty content - delete the todo
     emit('delete', props.todo.id)
   } else if (trimmed !== props.todo.content) {
     emit('update', props.todo.id, trimmed)
@@ -61,7 +60,6 @@ const handleKeydown = (e: KeyboardEvent) => {
     e.preventDefault()
     const trimmed = editContent.value.trim()
     if (trimmed === '') {
-      // Empty + Enter = delete current, don't create new
       emit('delete', props.todo.id)
     } else {
       saveEdit()
@@ -73,7 +71,6 @@ const handleKeydown = (e: KeyboardEvent) => {
 }
 
 const handleBlur = () => {
-  // Small delay to allow click events to fire
   setTimeout(() => {
     saveEdit()
   }, 100)
@@ -90,7 +87,7 @@ const handleDelete = () => {
 
 <template>
   <div
-    class="group flex items-center gap-2 p-2 rounded-lg transition-all duration-200 bg-white hover:bg-gray-50"
+    class="group flex items-center gap-2 px-2 py-1.5 rounded transition-all duration-200 bg-white hover:bg-gray-50"
     :class="{
       'bg-gray-50': todo.isCompleted,
     }"
@@ -100,12 +97,12 @@ const handleDelete = () => {
       class="drag-handle text-gray-300 cursor-grab active:cursor-grabbing"
       :class="{ 'opacity-0': isEditing }"
     >
-      <GripVertical class="w-4 h-4" />
+      <GripVertical class="w-3 h-3" />
     </div>
 
     <!-- Checkbox -->
     <button
-      class="flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors duration-200"
+      class="flex-shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-colors duration-200"
       :class="{
         'border-gray-300 hover:border-blue-400': !todo.isCompleted,
         'bg-blue-500 border-blue-500': todo.isCompleted,
@@ -114,7 +111,7 @@ const handleDelete = () => {
     >
       <Check
         v-if="todo.isCompleted"
-        class="w-3 h-3 text-white"
+        class="w-2.5 h-2.5 text-white"
       />
     </button>
 
@@ -124,7 +121,7 @@ const handleDelete = () => {
       ref="inputRef"
       v-model="editContent"
       type="text"
-      class="flex-1 px-2 py-1 text-sm bg-white border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-200"
+      class="flex-1 px-2 py-1 text-sm bg-white border border-blue-400 rounded focus:outline-none focus:ring-1 focus:ring-blue-200"
       @keydown="handleKeydown"
       @blur="handleBlur"
     />
@@ -146,11 +143,11 @@ const handleDelete = () => {
     <IconButton
       variant="danger"
       size="sm"
-      class="opacity-0 group-hover:opacity-100 transition-opacity"
+      class="opacity-0 group-hover:opacity-100 transition-opacity !p-0.5"
       :class="{ 'opacity-100': isEditing }"
       @click="handleDelete"
     >
-      <Trash2 class="w-4 h-4" />
+      <Trash2 class="w-3 h-3" />
     </IconButton>
   </div>
 </template>

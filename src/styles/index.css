@@ -41,7 +41,7 @@
   }
 
   .quadrant {
-    @apply flex flex-col p-4 overflow-hidden;
+    @apply flex flex-col p-2.5 overflow-hidden;
     background-color: white;
   }
 }

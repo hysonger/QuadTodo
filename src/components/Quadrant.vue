@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import type { QuadrantType, Todo, QuadrantConfig } from '@/types'
 import TodoList from './TodoList.vue'
 import { Plus } from 'lucide-vue-next'
-import Button from './common/Button.vue'
+import IconButton from './common/IconButton.vue'
 
 interface Props {
   config: QuadrantConfig
@@ -42,29 +42,26 @@ const handleReorder = (todos: Todo[]) => {
     :class="[config.bgColor]"
   >
     <!-- Header -->
-    <div class="flex items-center justify-between mb-3 pb-2 border-b-2" :class="[config.borderColor]">
-      <div class="flex items-center gap-2">
-        <h3 class="font-semibold text-base" :class="[config.textColor]">
+    <div class="flex items-center justify-between mb-2 pb-1.5 border-b-2" :class="[config.borderColor]">
+      <div class="flex items-center gap-1.5">
+        <h3 class="font-semibold text-sm" :class="[config.textColor]">
           {{ config.title }}
         </h3>
         <span
-          class="px-2 py-0.5 text-xs font-medium rounded-full bg-white"
+          class="px-1.5 py-0 text-[10px] font-medium rounded-full bg-white"
           :class="[config.textColor]"
         >
           {{ todoCount }}
         </span>
       </div>
-      <div class="flex items-center gap-2">
-        <span class="text-xs text-gray-500">{{ config.subtitle }}</span>
-        <Button
-          variant="ghost"
-          size="sm"
-          class="!p-1"
-          @click="handleCreate"
-        >
-          <Plus class="w-4 h-4" />
-        </Button>
-      </div>
+      <IconButton
+        variant="ghost"
+        size="sm"
+        class="!p-0.5"
+        @click="handleCreate"
+      >
+        <Plus class="w-3.5 h-3.5" />
+      </IconButton>
     </div>
 
     <!-- Todo List -->
