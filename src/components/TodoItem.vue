@@ -87,14 +87,14 @@ const handleDelete = () => {
 
 <template>
   <div
-    class="group flex items-center gap-2 px-2 py-1.5 rounded transition-all duration-200 bg-white hover:bg-gray-50"
+    class="group flex items-center gap-2 px-2 py-1.5 rounded transition-all duration-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
     :class="{
-      'bg-gray-50': todo.isCompleted,
+      'bg-gray-50 dark:bg-gray-700': todo.isCompleted,
     }"
   >
     <!-- Drag Handle -->
     <div
-      class="drag-handle text-gray-300 cursor-grab active:cursor-grabbing"
+      class="drag-handle text-gray-300 dark:text-gray-500 cursor-grab active:cursor-grabbing"
       :class="{ 'opacity-0': isEditing }"
     >
       <GripVertical class="w-3 h-3" />
@@ -121,7 +121,7 @@ const handleDelete = () => {
       ref="inputRef"
       v-model="editContent"
       type="text"
-      class="flex-1 px-2 py-1 text-sm bg-transparent border-0 focus:outline-none focus:ring-0"
+      class="flex-1 px-2 py-1 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 text-gray-700 dark:text-gray-200"
       @keydown="handleKeydown"
       @blur="handleBlur"
     />
@@ -131,8 +131,8 @@ const handleDelete = () => {
       v-else
       class="flex-1 min-w-0 px-2 py-1 text-sm cursor-text select-none"
       :class="{
-        'text-gray-400 line-through': todo.isCompleted,
-        'text-gray-700': !todo.isCompleted,
+        'text-gray-400 dark:text-gray-500 line-through': todo.isCompleted,
+        'text-gray-700 dark:text-gray-200': !todo.isCompleted,
       }"
       @click="startEditing"
     >

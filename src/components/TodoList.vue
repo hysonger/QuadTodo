@@ -65,7 +65,7 @@ const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?
     <template #footer>
       <div
         v-if="todos.length === 0"
-        class="flex-1 flex items-center justify-center text-gray-300 text-xs py-4 border border-dashed border-gray-200 rounded"
+        class="flex-1 flex items-center justify-center text-gray-300 dark:text-gray-500 text-xs py-4 border border-dashed border-gray-200 dark:border-gray-600 rounded"
       >
         拖拽或点击添加
       </div>
@@ -80,10 +80,19 @@ const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?
   border: 2px dashed #d1d5db;
 }
 
+.dark .ghost {
+  background-color: #374151;
+  border-color: #4b5563;
+}
+
 .dragging {
   opacity: 0.8;
   background-color: white;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   transform: rotate(2deg);
+}
+
+.dark .dragging {
+  background-color: #1f2937;
 }
 </style>

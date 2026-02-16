@@ -40,6 +40,10 @@
     background-color: #E5E7EB;
   }
 
+  .dark .quadrant-grid {
+    background-color: #374151;
+  }
+
   .quadrant {
     @apply flex flex-col p-2.5 overflow-hidden;
     background-color: white;

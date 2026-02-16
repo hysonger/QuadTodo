@@ -23,6 +23,37 @@ const emit = defineEmits<{
 
 const todoCount = computed(() => props.todos.length)
 
+// Compute dark mode classes based on quadrant type
+const darkBgClass = computed(() => {
+  const map: Record<string, string> = {
+    q1: 'dark:bg-q1-dark-bg',
+    q2: 'dark:bg-q2-dark-bg',
+    q3: 'dark:bg-q3-dark-bg',
+    q4: 'dark:bg-q4-dark-bg',
+  }
+  return map[props.config.type] || ''
+})
+
+const darkBorderClass = computed(() => {
+  const map: Record<string, string> = {
+    q1: 'dark:border-q1-dark-border',
+    q2: 'dark:border-q2-dark-border',
+    q3: 'dark:border-q3-dark-border',
+    q4: 'dark:border-q4-dark-border',
+  }
+  return map[props.config.type] || ''
+})
+
+const darkTextClass = computed(() => {
+  const map: Record<string, string> = {
+    q1: 'dark:text-q1-dark-text',
+    q2: 'dark:text-q2-dark-text',
+    q3: 'dark:text-q3-dark-text',
+    q4: 'dark:text-q4-dark-text',
+  }
+  return map[props.config.type] || ''
+})
+
 const handleCreate = () => {
   emit('create', props.config.type)
 }
@@ -39,17 +70,23 @@ const handleReorder = (todos: Todo[]) => {
 <template>
   <div
     class="quadrant flex flex-col h-full overflow-hidden"
-    :class="[config.bgColor]"
+    :class="[config.bgColor, darkBgClass]"
   >
     <!-- Header -->
-    <div class="flex items-center justify-between mb-2 pb-1.5 border-b-2" :class="[config.borderColor]">
+    <div
+      class="flex items-center justify-between mb-2 pb-1.5 border-b-2"
+      :class="[config.borderColor, darkBorderClass]"
+    >
       <div class="flex items-center gap-1.5">
-        <h3 class="font-semibold text-sm" :class="[config.textColor]">
+        <h3
+          class="font-semibold text-sm"
+          :class="[config.textColor, darkTextClass]"
+        >
           {{ config.title }}
         </h3>
         <span
-          class="px-1.5 py-0 text-[10px] font-medium rounded-full bg-white"
-          :class="[config.textColor]"
+          class="px-1.5 py-0 text-[10px] font-medium rounded-full bg-white dark:bg-gray-700"
+          :class="[config.textColor, darkTextClass]"
         >
           {{ todoCount }}
         </span>

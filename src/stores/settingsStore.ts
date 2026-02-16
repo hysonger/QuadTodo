@@ -8,6 +8,7 @@ export const useSettingsStore = defineStore('settings', () => {
   // State
   const showCompleted = ref(false)
   const compactMode = ref(false)
+  const isDarkMode = ref(false)
 
   // Quadrant configurations
   const quadrants = ref<QuadrantConfig[]>([
@@ -66,6 +67,7 @@ export const useSettingsStore = defineStore('settings', () => {
         const parsed = JSON.parse(data)
         showCompleted.value = parsed.showCompleted ?? false
         compactMode.value = parsed.compactMode ?? false
+        isDarkMode.value = parsed.isDarkMode ?? false
       }
     } catch {
       // Use defaults
@@ -77,6 +79,7 @@ export const useSettingsStore = defineStore('settings', () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         showCompleted: showCompleted.value,
         compactMode: compactMode.value,
+        isDarkMode: isDarkMode.value,
       }))
     } catch {
       // Ignore errors
@@ -91,19 +94,35 @@ export const useSettingsStore = defineStore('settings', () => {
     compactMode.value = !compactMode.value
   }
 
+  const toggleDarkMode = () => {
+    isDarkMode.value = !isDarkMode.value
+    updateDarkModeClass()
+  }
+
+  const updateDarkModeClass = () => {
+    if (isDarkMode.value) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
+
   // Auto-save on changes
-  watch([showCompleted, compactMode], saveSettings, { deep: true })
+  watch([showCompleted, compactMode, isDarkMode], saveSettings, { deep: true })
 
   // Initialize
   loadSettings()
+  updateDarkModeClass()
 
   return {
     showCompleted,
     compactMode,
+    isDarkMode,
     quadrants,
     getQuadrantConfig,
     toggleShowCompleted,
     toggleCompactMode,
+    toggleDarkMode,
     loadSettings,
     saveSettings,
   }

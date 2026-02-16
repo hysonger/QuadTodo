@@ -17,7 +17,7 @@ cd /Users/songer/Projects/QuadTodo && npm run build  # Full build command
 ### Tech Stack
 - Vue 3 (Composition API, `<script setup>`)
 - Pinia for state management
-- Tailwind CSS for styling
+- Tailwind CSS for styling with dark mode support
 - vuedraggable for drag-and-drop
 - LocalStorage for persistence (API layer pre-wired for future backend)
 
@@ -34,6 +34,11 @@ cd /Users/songer/Projects/QuadTodo && npm run build  # Full build command
 - `reorderTodos()` handles both intra-quadrant sorting and cross-quadrant moves
 - Store auto-initializes by calling `fetchTodos()` on creation
 
+**Settings Store** (`src/stores/settingsStore.ts`):
+- Manages `isDarkMode` state with persistence to LocalStorage
+- `toggleDarkMode()` adds/removes `dark` class on document.documentElement
+- Tailwind configured with `darkMode: 'class'` strategy
+
 **API Layer** (`src/api/todoApi.ts`):
 - Currently implements LocalStorage persistence
 - `STORAGE_KEY = 'quad-todo-items'`
@@ -44,6 +49,17 @@ cd /Users/songer/Projects/QuadTodo && npm run build  # Full build command
 - Uses `vuedraggable` with group="todos" to enable cross-quadrant dragging
 - `handleChange` emits `reorder` event with new todo order
 - Quadrant components update `isUrgent`/`isImportant` flags based on drop target
+
+### Dark Mode Implementation
+
+**Color System** (`tailwind.config.js`):
+- Each quadrant has light and dark color variants: `q1`, `q2`, `q3`, `q4` (light) and `q1-dark`, `q2-dark`, etc. (dark)
+- Dark colors use deep saturated backgrounds (e.g., q1-dark-bg: `#450a0a`) with lighter text for contrast
+- Quadrant colors are preserved in dark mode to maintain visual distinction
+
+**Quadrant Dark Mode Classes** (`src/components/Quadrant.vue`):
+- Each quadrant dynamically computes dark mode classes based on its type
+- Applied classes: `dark:bg-qX-dark-bg`, `dark:border-qX-dark-border`, `dark:text-qX-dark-text`
 
 ### Path Aliases
 - `@/` maps to `src/` (configured in `vite.config.ts` and `tsconfig.json`)
@@ -58,6 +74,7 @@ App.vue
 ```
 
 ### Styling Notes
-- Quadrant colors defined in `tailwind.config.js` (q1-bg, q2-bg, etc.)
+- Quadrant colors defined in `tailwind.config.js` (q1-bg, q2-bg, etc. with dark variants)
 - Compact UI: text-sm for todo items, minimal padding
-- Custom scrollbar styles in `App.vue`
+- Custom scrollbar styles in `App.vue` with dark mode variants
+- TodoItem editing uses transparent background for seamless inline editing
