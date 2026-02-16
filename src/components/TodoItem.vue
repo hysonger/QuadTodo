@@ -121,7 +121,7 @@ const handleDelete = () => {
       ref="inputRef"
       v-model="editContent"
       type="text"
-      class="flex-1 px-2 py-1 text-sm bg-white border border-blue-400 rounded focus:outline-none focus:ring-1 focus:ring-blue-200"
+      class="flex-1 px-2 py-1 text-sm bg-transparent border-0 focus:outline-none focus:ring-0"
       @keydown="handleKeydown"
       @blur="handleBlur"
     />
