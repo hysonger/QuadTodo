@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Quadrant CSS Variables */
+    --q1-bg: #FEF2F2;
+    --q1-border: #FECACA;
+    --q1-text: #DC2626;
+    --q2-bg: #FFFBEB;
+    --q2-border: #FDE68A;
+    --q2-text: #D97706;
+    --q3-bg: #EFF6FF;
+    --q3-border: #BFDBFE;
+    --q3-text: #2563EB;
+    --q4-bg: #F9FAFB;
+    --q4-border: #E5E7EB;
+    --q4-text: #4B5563;
+  }
+
+  * {
+    @apply box-border;
+  }
+
+  html, body, #app {
+    @apply h-full w-full m-0 p-0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  #app {
+    @apply bg-gray-50;
+  }
+}
+
+@layer components {
+  .quadrant-grid {
+    @apply grid grid-cols-2 grid-rows-2 h-full;
+    gap: 2px;
+    background-color: #E5E7EB;
+  }
+
+  .quadrant {
+    @apply flex flex-col p-4 overflow-hidden;
+    background-color: white;
+  }
+}
+
+@layer utilities {
+  .dragging {
+    @apply opacity-50;
+  }
+
+  .drag-over {
+    @apply ring-2 ring-blue-400 ring-inset;
+  }
+}
