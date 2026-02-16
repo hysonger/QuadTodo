@@ -22,13 +22,16 @@ const handleCreateNext = (quadrant: QuadrantType) => {
   handleCreate(quadrant)
 }
 
-const handleReorder = (quadrant: QuadrantType, todos: Todo[]) => {
+const handleReorder = (quadrant: QuadrantType, todos: Todo[], isSameQuadrant: boolean = true) => {
   // Update order for all items
   const updates = todos.map((todo, index) => ({
     id: todo.id,
     order: index,
-    isUrgent: quadrant === 'q1' || quadrant === 'q2',
-    isImportant: quadrant === 'q1' || quadrant === 'q3',
+    // Only update quadrant flags when moving between quadrants
+    ...(isSameQuadrant ? {} : {
+      isUrgent: quadrant === 'q1' || quadrant === 'q2',
+      isImportant: quadrant === 'q1' || quadrant === 'q3',
+    })
   }))
   todoStore.reorderTodos(updates)
 }

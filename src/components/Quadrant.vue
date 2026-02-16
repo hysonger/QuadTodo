@@ -18,7 +18,7 @@ const emit = defineEmits<{
   (e: 'delete', id: string): void
   (e: 'create', quadrant: QuadrantType): void
   (e: 'createNext', quadrant: QuadrantType): void
-  (e: 'reorder', quadrant: QuadrantType, todos: Todo[]): void
+  (e: 'reorder', quadrant: QuadrantType, todos: Todo[], isSameQuadrant: boolean): void
 }>()
 
 const todoCount = computed(() => props.todos.length)
@@ -62,8 +62,8 @@ const handleCreateNext = (quadrant: QuadrantType) => {
   emit('createNext', quadrant)
 }
 
-const handleReorder = (todos: Todo[]) => {
-  emit('reorder', props.config.type, todos)
+const handleReorder = (todos: Todo[], isSameQuadrant: boolean = true) => {
+  emit('reorder', props.config.type, todos, isSameQuadrant)
 }
 </script>
 

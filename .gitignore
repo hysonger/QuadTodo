@@ -1,3 +1,8 @@
 dist/
 node_modules/
 .claude/settings.local.json
+
+# Tauri generated files
+src-tauri/target/
+src-tauri/.cargo/
+src-tauri/gen/

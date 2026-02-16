@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import type { Todo, QuadrantType } from '@/types'
 import TodoItem from './TodoItem.vue'
@@ -16,35 +16,41 @@ const emit = defineEmits<{
   (e: 'toggle', id: string): void
   (e: 'delete', id: string): void
   (e: 'createNext', quadrant: QuadrantType): void
-  (e: 'reorder', todos: Todo[]): void
+  (e: 'reorder', todos: Todo[], isSameQuadrant: boolean): void
 }>()
 
-const sortedTodos = computed({
-  get: () => [...props.todos].sort((a, b) => a.order - b.order),
-  set: (value) => {
-    emit('reorder', value)
-  }
-})
+// Local list for draggable (not using v-model to avoid conflicts)
+const localList = ref<Todo[]>([])
+
+// Sync local list with props
+watch(
+  () => props.todos,
+  (newTodos) => {
+    localList.value = [...newTodos].sort((a, b) => a.order - b.order)
+  },
+  { immediate: true, deep: true }
+)
 
 const handleCreateNext = () => {
   emit('createNext', props.quadrantType)
 }
 
-const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?: { newIndex: number; oldIndex: number } }) => {
-  if (evt.added) {
-    // Item moved from another quadrant
-    emit('reorder', sortedTodos.value)
-  }
+const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?: { newIndex: number; oldIndex: number }; removed?: { element: Todo; oldIndex: number } }) => {
   if (evt.moved) {
-    // Item moved within same quadrant
-    emit('reorder', sortedTodos.value)
+    // Same-quadrant reordering
+    emit('reorder', localList.value, true)
+  } else if (evt.added) {
+    // Item moved from another quadrant
+    emit('reorder', localList.value, false)
   }
+  // Note: evt.removed is handled by the source quadrant's localList update,
+  // but we don't need to emit reorder for removals as the target quadrant handles it
 }
 </script>
 
 <template>
   <draggable
-    v-model="sortedTodos"
+    :list="localList"
     item-key="id"
     group="todos"
     class="flex-1 flex flex-col gap-1 min-h-0 overflow-y-auto"

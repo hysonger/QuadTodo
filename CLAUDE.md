@@ -4,11 +4,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 
+### Web Build
 ```bash
 npm run dev      # Start Vite dev server (port 5173)
 npm run build    # Type check + production build
 cd /Users/songer/Projects/QuadTodo && npm run build  # Full build command
 ```
+
+### Desktop Build (Tauri)
+```bash
+npm run tauri:dev          # Run desktop app in dev mode
+npm run tauri:build        # Build desktop app for current platform
+npm run desktop:win        # Build for Windows (cross-compile)
+npm run desktop:mac        # Build for macOS Intel
+npm run desktop:mac-arm    # Build for macOS Apple Silicon
+npm run desktop:linux      # Build for Linux
+```
+
+### Build Outputs
+Desktop builds output to:
+- macOS: `src-tauri/target/release/bundle/macos/*.app` + `src-tauri/target/release/bundle/dmg/*.dmg`
+- Windows: `src-tauri/target/release/bundle/msi/*.msi`
+- Linux: `src-tauri/target/release/bundle/deb/*.deb`, `src-tauri/target/release/bundle/appimage/*.AppImage`
+
+### Typical Bundle Sizes
+- DMG (macOS): ~2-3MB
+- MSI (Windows): ~4-5MB
+- AppImage (Linux): ~5-6MB
 
 ## Architecture
 
@@ -20,6 +42,7 @@ cd /Users/songer/Projects/QuadTodo && npm run build  # Full build command
 - Tailwind CSS for styling with dark mode support
 - vuedraggable for drag-and-drop
 - LocalStorage for persistence (API layer pre-wired for future backend)
+- **Tauri v2** for desktop app packaging (cross-platform, ~2-5MB bundles)
 
 ### Key Architectural Patterns
 
@@ -72,6 +95,27 @@ App.vue
         └── TodoList (vuedraggable)
             └── TodoItem
 ```
+
+### Desktop Packaging (Tauri)
+
+**Configuration** (`src-tauri/tauri.conf.json`):
+- Window size: 1200x800 (min: 800x600)
+- Uses system WebView (no bundled Chromium)
+- Bundle identifier: `com.quad-todo.app`
+
+**Icon Generation**:
+- Place source icon at `src-tauri/icons/icon.png` (1024x1024 PNG)
+- Run `npx tauri icon` to generate all platform icons
+
+**Platform-Specific Notes**:
+- **macOS**: Creates `.app` bundle + `.dmg` installer
+- **Windows**: Creates `.msi` installer (requires WebView2 runtime)
+- **Linux**: Creates `.deb`, `.rpm`, and `.AppImage` packages
+
+**Cross-Compilation**:
+- Native builds work on host platform
+- Cross-compilation requires additional setup (see Tauri docs)
+- GitHub Actions recommended for automated multi-platform builds
 
 ### Styling Notes
 - Quadrant colors defined in `tailwind.config.js` (q1-bg, q2-bg, etc. with dark variants)

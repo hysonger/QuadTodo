@@ -1,0 +1,22 @@
+[package]
+name = "quad-todo"
+version = "0.1.0"
+description = "四象限待办 - 基于 Eisenhower Matrix 的任务管理工具"
+authors = ["QuadTodo"]
+license = "MIT"
+repository = ""
+edition = "2021"
+rust-version = "1.70"
+
+[build-dependencies]
+tauri-build = { version = "2.0.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

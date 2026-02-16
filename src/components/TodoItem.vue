@@ -121,7 +121,7 @@ const handleDelete = () => {
       ref="inputRef"
       v-model="editContent"
       type="text"
-      class="flex-1 px-2 py-1 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 text-gray-700 dark:text-gray-200"
+      class="flex-1 px-2 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 text-gray-700 dark:text-gray-200 h-7 leading-7"
       @keydown="handleKeydown"
       @blur="handleBlur"
     />
@@ -129,7 +129,7 @@ const handleDelete = () => {
     <!-- Content - Display -->
     <div
       v-else
-      class="flex-1 min-w-0 px-2 py-1 text-sm cursor-text select-none"
+      class="flex-1 min-w-0 px-2 text-sm cursor-text select-none h-7 leading-7"
       :class="{
         'text-gray-400 dark:text-gray-500 line-through': todo.isCompleted,
         'text-gray-700 dark:text-gray-200': !todo.isCompleted,
