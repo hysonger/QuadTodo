@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "四象限待办",
         "width": 1200,
         "height": 800,
@@ -22,7 +23,8 @@
         "fullscreen": false,
         "visible": true,
         "decorations": true,
-        "transparent": false
+        "transparent": false,
+        "dragDropEnabled": false
       }
     ],
     "security": {
