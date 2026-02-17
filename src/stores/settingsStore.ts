@@ -9,6 +9,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const showCompleted = ref(false)
   const compactMode = ref(false)
   const isDarkMode = ref(false)
+  const customSlogan = ref('日拱一卒')
 
   // Quadrant configurations
   const quadrants = ref<QuadrantConfig[]>([
@@ -68,6 +69,7 @@ export const useSettingsStore = defineStore('settings', () => {
         showCompleted.value = parsed.showCompleted ?? false
         compactMode.value = parsed.compactMode ?? false
         isDarkMode.value = parsed.isDarkMode ?? false
+        customSlogan.value = parsed.customSlogan ?? '日拱一卒'
       }
     } catch {
       // Use defaults
@@ -80,6 +82,7 @@ export const useSettingsStore = defineStore('settings', () => {
         showCompleted: showCompleted.value,
         compactMode: compactMode.value,
         isDarkMode: isDarkMode.value,
+        customSlogan: customSlogan.value,
       }))
     } catch {
       // Ignore errors
@@ -99,6 +102,10 @@ export const useSettingsStore = defineStore('settings', () => {
     updateDarkModeClass()
   }
 
+  const setCustomSlogan = (slogan: string) => {
+    customSlogan.value = slogan
+  }
+
   const updateDarkModeClass = () => {
     if (isDarkMode.value) {
       document.documentElement.classList.add('dark')
@@ -108,7 +115,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   // Auto-save on changes
-  watch([showCompleted, compactMode, isDarkMode], saveSettings, { deep: true })
+  watch([showCompleted, compactMode, isDarkMode, customSlogan], saveSettings, { deep: true })
 
   // Initialize
   loadSettings()
@@ -118,11 +125,13 @@ export const useSettingsStore = defineStore('settings', () => {
     showCompleted,
     compactMode,
     isDarkMode,
+    customSlogan,
     quadrants,
     getQuadrantConfig,
     toggleShowCompleted,
     toggleCompactMode,
     toggleDarkMode,
+    setCustomSlogan,
     loadSettings,
     saveSettings,
   }

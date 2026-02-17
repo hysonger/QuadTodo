@@ -1,12 +1,22 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useTodoStore } from '@/stores/todoStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import QuadrantGrid from '@/components/QuadrantGrid.vue'
-import { Moon, Sun } from 'lucide-vue-next'
+import Settings from '@/components/Settings.vue'
+import { Moon, Sun, Settings as SettingsIcon } from 'lucide-vue-next'
 
 const todoStore = useTodoStore()
 const settingsStore = useSettingsStore()
+const showSettings = ref(false)
+
+const openSettings = () => {
+  showSettings.value = true
+}
+
+const closeSettings = () => {
+  showSettings.value = false
+}
 
 onMounted(() => {
   todoStore.fetchTodos()
@@ -17,27 +27,39 @@ onMounted(() => {
   <div class="h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center">
-          <span class="text-white font-bold text-xs">Q</span>
-        </div>
-        <h1 class="text-base font-semibold text-gray-800 dark:text-gray-100">四象限待办</h1>
+      <!-- Custom Slogan -->
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        {{ settingsStore.customSlogan }}
       </div>
 
-      <!-- Dark Mode Toggle -->
-      <button
-        class="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-        @click="settingsStore.toggleDarkMode"
-      >
-        <Sun v-if="settingsStore.isDarkMode" class="w-4 h-4" />
-        <Moon v-else class="w-4 h-4" />
-      </button>
+      <!-- Right Controls -->
+      <div class="flex items-center gap-1">
+        <!-- Dark Mode Toggle -->
+        <button
+          class="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          @click="settingsStore.toggleDarkMode"
+        >
+          <Sun v-if="settingsStore.isDarkMode" class="w-4 h-4" />
+          <Moon v-else class="w-4 h-4" />
+        </button>
+
+        <!-- Settings Button -->
+        <button
+          class="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          @click="openSettings"
+        >
+          <SettingsIcon class="w-4 h-4" />
+        </button>
+      </div>
     </header>
 
     <!-- Main Content -->
     <main class="flex-1 p-2 overflow-hidden">
       <QuadrantGrid />
     </main>
+
+    <!-- Settings Panel -->
+    <Settings v-if="showSettings" @close="closeSettings" />
   </div>
 </template>
 
