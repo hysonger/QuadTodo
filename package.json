@@ -13,7 +13,13 @@
     "desktop:win": "tauri build --target x86_64-pc-windows-msvc",
     "desktop:mac": "tauri build --target x86_64-apple-darwin",
     "desktop:mac-arm": "tauri build --target aarch64-apple-darwin",
-    "desktop:linux": "tauri build --target x86_64-unknown-linux-gnu"
+    "desktop:linux": "tauri build --target x86_64-unknown-linux-gnu",
+    "icons:generate": "tauri icon src-tauri/icons/icon.png",
+    "tauri:build:full": "npm run icons:generate && npm run tauri:build",
+    "desktop:win:full": "npm run icons:generate && npm run desktop:win",
+    "desktop:mac:full": "npm run icons:generate && npm run desktop:mac",
+    "desktop:mac-arm:full": "npm run icons:generate && npm run desktop:mac-arm",
+    "desktop:linux:full": "npm run icons:generate && npm run desktop:linux"
   },
   "dependencies": {
     "@vueuse/core": "^12.7.0",

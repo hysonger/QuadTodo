@@ -61,6 +61,7 @@ const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?
   >
     <template #item="{ element }">
       <TodoItem
+        :key="element.id"
         :todo="element"
         @update="(id, content) => emit('update', id, content)"
         @toggle="(id) => emit('toggle', id)"

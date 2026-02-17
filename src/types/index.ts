@@ -23,6 +23,8 @@ export interface Todo {
   createdAt: number
   /** 更新时间 */
   updatedAt: number
+  /** 是否为新创建的待办项（自动聚焦用） */
+  isNew?: boolean
 }
 
 /**

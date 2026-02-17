@@ -13,13 +13,30 @@ cd /Users/songer/Projects/QuadTodo && npm run build  # Full build command
 
 ### Desktop Build (Tauri)
 ```bash
-npm run tauri:dev          # Run desktop app in dev mode
-npm run tauri:build        # Build desktop app for current platform
-npm run desktop:win        # Build for Windows (cross-compile)
-npm run desktop:mac        # Build for macOS Intel
-npm run desktop:mac-arm    # Build for macOS Apple Silicon
-npm run desktop:linux      # Build for Linux
+# Development
+npm run tauri:dev                 # Run desktop app in dev mode
+
+# Production Build (requires icon.png to exist)
+npm run tauri:build               # Build desktop app for current platform (icons must exist)
+npm run tauri:build:full          # Generate icons + build for current platform
+
+# Platform-specific builds (requires icons to exist)
+npm run desktop:win               # Build for Windows (cross-compile)
+npm run desktop:mac               # Build for macOS Intel
+npm run desktop:mac-arm           # Build for macOS Apple Silicon
+npm run desktop:linux             # Build for Linux
+
+# Platform-specific full builds (generate icons + build)
+npm run desktop:win:full          # Generate icons + build for Windows
+npm run desktop:mac:full          # Generate icons + build for macOS Intel
+npm run desktop:mac-arm:full      # Generate icons + build for macOS Apple Silicon
+npm run desktop:linux:full        # Generate icons + build for Linux
+
+# Icon Generation (from src-tauri/icons/icon.png)
+npm run icons:generate            # Generate all platform icons from source
 ```
+
+**Note**: Generated icon files are excluded from git (see .gitignore). Only `src-tauri/icons/icon.png` (1024x1024 PNG source) is tracked. Run `npm run icons:generate` before building if icons are missing.
 
 ### Build Outputs
 Desktop builds output to:

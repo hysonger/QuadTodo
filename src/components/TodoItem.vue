@@ -22,6 +22,17 @@ const isEditing = ref(false)
 const editContent = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
 
+// Watch for isNew flag to auto-enter edit mode
+watch(() => props.todo.isNew, (isNew) => {
+  if (isNew && !props.todo.isCompleted) {
+    isEditing.value = true
+    editContent.value = props.todo.content
+    nextTick(() => {
+      inputRef.value?.focus()
+    })
+  }
+}, { immediate: true })
+
 // Watch for external updates
 watch(() => props.todo.content, (newContent) => {
   if (!isEditing.value) {
