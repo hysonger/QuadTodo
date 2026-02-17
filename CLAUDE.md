@@ -119,6 +119,7 @@ App.vue
 - Window size: 1200x800 (min: 800x600)
 - Uses system WebView (no bundled Chromium)
 - Bundle identifier: `com.quad-todo.app`
+- **macOS title bar**: Uses `"titleBarStyle": "Transparent"` to make the title bar automatically follow system dark/light mode appearance
 
 **Icon Generation**:
 - Place source icon at `src-tauri/icons/icon.png` (1024x1024 PNG)
