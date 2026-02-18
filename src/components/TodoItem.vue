@@ -21,6 +21,7 @@ const emit = defineEmits<{
 const isEditing = ref(false)
 const editContent = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
+const hasUserTyped = ref(false)
 
 // Watch for isNew flag to auto-enter edit mode
 watch(() => props.todo.isNew, (isNew) => {
@@ -45,6 +46,7 @@ const startEditing = () => {
   if (props.todo.isCompleted) return
   isEditing.value = true
   editContent.value = props.todo.content
+  hasUserTyped.value = false
   nextTick(() => {
     inputRef.value?.focus()
     inputRef.value?.select()
@@ -59,6 +61,7 @@ const saveEdit = () => {
     emit('update', props.todo.id, trimmed)
   }
   isEditing.value = false
+  hasUserTyped.value = false
 }
 
 const cancelEdit = () => {
@@ -66,11 +69,18 @@ const cancelEdit = () => {
   isEditing.value = false
 }
 
+const handleInput = () => {
+  hasUserTyped.value = true
+}
+
 const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === 'Enter') {
     e.preventDefault()
     const trimmed = editContent.value.trim()
     if (trimmed === '') {
+      if (!hasUserTyped.value && props.todo.isNew) {
+        return
+      }
       emit('delete', props.todo.id)
     } else {
       saveEdit()
@@ -134,6 +144,7 @@ const handleDelete = () => {
       type="text"
       class="flex-1 px-2 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 text-gray-700 dark:text-gray-200 h-7 leading-7"
       @keydown="handleKeydown"
+      @input="handleInput"
       @blur="handleBlur"
     />
 
