@@ -10,4 +10,21 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'codemirror': [
+            'vue-codemirror',
+            '@codemirror/view',
+            '@codemirror/state',
+            '@codemirror/lang-markdown',
+            '@codemirror/language',
+            '@codemirror/commands',
+            '@codemirror/theme-one-dark',
+          ],
+        },
+      },
+    },
+  },
 })

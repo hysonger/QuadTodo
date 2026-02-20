@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, nextTick, watch } from 'vue'
-import { Check, Trash2, GripVertical } from 'lucide-vue-next'
+import { Check, Trash2, GripVertical, FileText } from 'lucide-vue-next'
 import type { Todo } from '@/types'
 import IconButton from './common/IconButton.vue'
 
@@ -15,6 +15,7 @@ const emit = defineEmits<{
   (e: 'toggle', id: string): void
   (e: 'delete', id: string): void
   (e: 'createNext'): void
+  (e: 'openDocument', id: string): void
 }>()
 
 // State
@@ -104,6 +105,10 @@ const handleCheckboxChange = () => {
 const handleDelete = () => {
   emit('delete', props.todo.id)
 }
+
+const handleOpenDocument = () => {
+  emit('openDocument', props.todo.id)
+}
 </script>
 
 <template>
@@ -161,6 +166,19 @@ const handleDelete = () => {
       {{ todo.content }}
     </div>
 
+    <!-- Document Button -->
+    <IconButton
+      size="sm"
+      class="document-btn"
+      :class="[
+        isEditing ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+        todo.hasDocument ? 'has-document' : ''
+      ]"
+      @click="handleOpenDocument"
+    >
+      <FileText class="w-3 h-3" />
+    </IconButton>
+
     <!-- Delete Button -->
     <IconButton
       variant="danger"
@@ -182,5 +200,39 @@ const handleDelete = () => {
 
 .group:hover .drag-handle {
   opacity: 1;
+}
+
+.document-btn {
+  opacity: 0;
+  transition: opacity 0.2s;
+  padding: 2px;
+  color: #9ca3af;
+}
+
+.document-btn.opacity-100,
+.group:hover .document-btn {
+  opacity: 1;
+}
+
+.document-btn.has-document {
+  color: #2563eb;
+}
+
+.document-btn.opacity-100.has-document:hover,
+.group:hover .document-btn.has-document:hover {
+  background-color: #eff6ff;
+}
+
+:global(.dark) .document-btn {
+  color: #6b7280;
+}
+
+:global(.dark) .document-btn.has-document {
+  color: #60a5fa;
+}
+
+:global(.dark) .document-btn.opacity-100.has-document:hover,
+:global(.dark) .group:hover .document-btn.has-document:hover {
+  background-color: rgba(30, 58, 138, 0.3);
 }
 </style>

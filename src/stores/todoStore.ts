@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { todoApi } from '@/api/todoApi'
+import { documentApi } from '@/api/documentApi'
 import type { Todo, QuadrantType, CreateTodoRequest, UpdateTodoRequest, ReorderUpdate } from '@/types'
 
 export const useTodoStore = defineStore('todos', () => {
@@ -39,6 +40,40 @@ export const useTodoStore = defineStore('todos', () => {
       .filter(t => t.isCompleted)
       .sort((a, b) => b.updatedAt - a.updatedAt)
   })
+
+  const q1CompletedTodos = computed(() => {
+    return todos.value
+      .filter(t => t.isUrgent && t.isImportant && t.isCompleted)
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+  })
+
+  const q2CompletedTodos = computed(() => {
+    return todos.value
+      .filter(t => t.isUrgent && !t.isImportant && t.isCompleted)
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+  })
+
+  const q3CompletedTodos = computed(() => {
+    return todos.value
+      .filter(t => !t.isUrgent && t.isImportant && t.isCompleted)
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+  })
+
+  const q4CompletedTodos = computed(() => {
+    return todos.value
+      .filter(t => !t.isUrgent && !t.isImportant && t.isCompleted)
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+  })
+
+  const getCompletedTodosByQuadrant = (type: QuadrantType) => {
+    switch (type) {
+      case 'q1': return q1CompletedTodos.value
+      case 'q2': return q2CompletedTodos.value
+      case 'q3': return q3CompletedTodos.value
+      case 'q4': return q4CompletedTodos.value
+      default: return []
+    }
+  }
 
   const getTodosByQuadrant = (type: QuadrantType) => {
     switch (type) {
@@ -159,6 +194,56 @@ export const useTodoStore = defineStore('todos', () => {
     }
   }
 
+  const getTodoById = (id: string): Todo | undefined => {
+    return todos.value.find(t => t.id === id)
+  }
+
+  const createDocument = async (todoId: string, content: string = '') => {
+    try {
+      await documentApi.createDocument(todoId, content)
+      await updateTodo(todoId, { hasDocument: true })
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to create document'
+      throw err
+    }
+  }
+
+  const getDocument = async (todoId: string): Promise<string> => {
+    try {
+      return await documentApi.getDocument(todoId)
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to get document'
+      throw err
+    }
+  }
+
+  const updateDocument = async (todoId: string, content: string) => {
+    try {
+      await documentApi.updateDocument(todoId, content)
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update document'
+      throw err
+    }
+  }
+
+  const deleteDocument = async (todoId: string) => {
+    try {
+      await documentApi.deleteDocument(todoId)
+      await updateTodo(todoId, { hasDocument: false })
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to delete document'
+      throw err
+    }
+  }
+
+  const checkDocumentExists = async (todoId: string): Promise<boolean> => {
+    try {
+      return await documentApi.documentExists(todoId)
+    } catch (err) {
+      return false
+    }
+  }
+
   // Initialize
   fetchTodos()
 
@@ -171,8 +256,13 @@ export const useTodoStore = defineStore('todos', () => {
     q3Todos,
     q4Todos,
     completedTodos,
+    q1CompletedTodos,
+    q2CompletedTodos,
+    q3CompletedTodos,
+    q4CompletedTodos,
     getQuadrantCounts,
     getTodosByQuadrant,
+    getCompletedTodosByQuadrant,
     fetchTodos,
     addTodo,
     updateTodo,
@@ -181,5 +271,11 @@ export const useTodoStore = defineStore('todos', () => {
     toggleTodoComplete,
     moveTodo,
     reorderTodos,
+    getTodoById,
+    createDocument,
+    getDocument,
+    updateDocument,
+    deleteDocument,
+    checkDocumentExists,
   }
 })

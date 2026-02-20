@@ -8,9 +8,12 @@ import IconButton from './common/IconButton.vue'
 interface Props {
   config: QuadrantConfig
   todos: Todo[]
+  completedTodos?: Todo[]
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  completedTodos: () => [],
+})
 
 const emit = defineEmits<{
   (e: 'update', id: string, content: string): void
@@ -19,6 +22,7 @@ const emit = defineEmits<{
   (e: 'create', quadrant: QuadrantType): void
   (e: 'createNext', quadrant: QuadrantType): void
   (e: 'reorder', quadrant: QuadrantType, todos: Todo[], isSameQuadrant: boolean): void
+  (e: 'openDocument', id: string): void
 }>()
 
 const todoCount = computed(() => props.todos.length)
@@ -110,6 +114,29 @@ const handleReorder = (todos: Todo[], isSameQuadrant: boolean = true) => {
       @delete="(id) => emit('delete', id)"
       @create-next="handleCreateNext"
       @reorder="handleReorder"
+      @open-document="(id) => emit('openDocument', id)"
     />
+
+    <!-- Completed Section -->
+    <div
+      v-if="completedTodos.length > 0"
+      class="mt-2 pt-2 border-t border-gray-200/50 dark:border-gray-600/50"
+    >
+      <div class="text-xs text-gray-400 dark:text-gray-500 mb-1 px-1">
+        已完成 ({{ completedTodos.length }})
+      </div>
+      <div class="flex flex-col gap-1">
+        <TodoList
+          :todos="completedTodos"
+          :quadrant-type="config.type"
+          @update="(id, content) => emit('update', id, content)"
+          @toggle="(id) => emit('toggle', id)"
+          @delete="(id) => emit('delete', id)"
+          @create-next="handleCreateNext"
+          @reorder="handleReorder"
+          @open-document="(id) => emit('openDocument', id)"
+        />
+      </div>
+    </div>
   </div>
 </template>

@@ -17,6 +17,7 @@ const emit = defineEmits<{
   (e: 'delete', id: string): void
   (e: 'createNext', quadrant: QuadrantType): void
   (e: 'reorder', todos: Todo[], isSameQuadrant: boolean): void
+  (e: 'openDocument', id: string): void
 }>()
 
 // Local list for draggable (not using v-model to avoid conflicts)
@@ -67,6 +68,7 @@ const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?
         @toggle="(id) => emit('toggle', id)"
         @delete="(id) => emit('delete', id)"
         @create-next="handleCreateNext"
+        @open-document="(id) => emit('openDocument', id)"
       />
     </template>
     <template #footer>

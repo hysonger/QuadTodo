@@ -67,6 +67,7 @@ export const todoApi = {
       isUrgent: request.isUrgent,
       isImportant: request.isImportant,
       isCompleted: false,
+      hasDocument: false,
       order: getMaxOrder() + 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),

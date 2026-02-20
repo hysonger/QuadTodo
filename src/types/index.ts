@@ -23,6 +23,8 @@ export interface Todo {
   createdAt: number
   /** 更新时间 */
   updatedAt: number
+  /** 是否关联文档 */
+  hasDocument: boolean
   /** 是否为新创建的待办项（自动聚焦用） */
   isNew?: boolean
 }
@@ -45,6 +47,7 @@ export interface UpdateTodoRequest {
   isImportant?: boolean
   isCompleted?: boolean
   order?: number
+  hasDocument?: boolean
 }
 
 /**
