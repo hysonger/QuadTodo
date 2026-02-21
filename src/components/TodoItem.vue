@@ -21,6 +21,7 @@ const emit = defineEmits<{
 // State
 const isEditing = ref(false)
 const editContent = ref('')
+const originalContent = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
 const hasUserTyped = ref(false)
 
@@ -29,6 +30,7 @@ watch(() => props.todo.isNew, (isNew) => {
   if (isNew && !props.todo.isCompleted) {
     isEditing.value = true
     editContent.value = props.todo.content
+    originalContent.value = props.todo.content
     nextTick(() => {
       inputRef.value?.focus()
     })
@@ -47,6 +49,7 @@ const startEditing = () => {
   if (props.todo.isCompleted) return
   isEditing.value = true
   editContent.value = props.todo.content
+  originalContent.value = props.todo.content
   hasUserTyped.value = false
   nextTick(() => {
     inputRef.value?.focus()
@@ -88,7 +91,12 @@ const handleKeydown = (e: KeyboardEvent) => {
       emit('createNext')
     }
   } else if (e.key === 'Escape') {
-    cancelEdit()
+    e.preventDefault()
+    if (originalContent.value === '') {
+      emit('delete', props.todo.id)
+    } else {
+      cancelEdit()
+    }
   }
 }
 
