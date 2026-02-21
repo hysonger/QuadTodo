@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { QuadrantType, Todo, QuadrantConfig } from '@/types'
 import TodoList from './TodoList.vue'
-import { Plus } from 'lucide-vue-next'
+import { Plus, ChevronDown, ChevronUp } from 'lucide-vue-next'
 import IconButton from './common/IconButton.vue'
 
 interface Props {
@@ -14,6 +14,12 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   completedTodos: () => [],
 })
+
+const isCompletedExpanded = ref(false)
+
+const toggleCompleted = () => {
+  isCompletedExpanded.value = !isCompletedExpanded.value
+}
 
 const emit = defineEmits<{
   (e: 'update', id: string, content: string): void
@@ -106,28 +112,10 @@ const handleReorder = (todos: Todo[], isSameQuadrant: boolean = true) => {
     </div>
 
     <!-- Todo List -->
-    <TodoList
-      :todos="todos"
-      :quadrant-type="config.type"
-      @update="(id, content) => emit('update', id, content)"
-      @toggle="(id) => emit('toggle', id)"
-      @delete="(id) => emit('delete', id)"
-      @create-next="handleCreateNext"
-      @reorder="handleReorder"
-      @open-document="(id) => emit('openDocument', id)"
-    />
-
-    <!-- Completed Section -->
-    <div
-      v-if="completedTodos.length > 0"
-      class="mt-2 pt-2 border-t border-gray-200/50 dark:border-gray-600/50"
-    >
-      <div class="text-xs text-gray-400 dark:text-gray-500 mb-1 px-1">
-        已完成 ({{ completedTodos.length }})
-      </div>
-      <div class="flex flex-col gap-1">
+    <div class="flex-1 flex flex-col min-h-0 overflow-y-auto">
+      <div class="flex-shrink-0">
         <TodoList
-          :todos="completedTodos"
+          :todos="todos"
           :quadrant-type="config.type"
           @update="(id, content) => emit('update', id, content)"
           @toggle="(id) => emit('toggle', id)"
@@ -136,6 +124,39 @@ const handleReorder = (todos: Todo[], isSameQuadrant: boolean = true) => {
           @reorder="handleReorder"
           @open-document="(id) => emit('openDocument', id)"
         />
+      </div>
+
+      <!-- Completed Section -->
+      <div
+        v-if="completedTodos.length > 0"
+        class="pt-2 border-t border-gray-200/50 dark:border-gray-600/50"
+      >
+        <div class="flex items-center justify-between mb-1 px-1">
+          <div class="text-xs text-gray-400 dark:text-gray-500">
+            已完成 ({{ completedTodos.length }})
+          </div>
+          <IconButton
+            variant="ghost"
+            size="sm"
+            class="!p-0.5"
+            @click="toggleCompleted"
+          >
+            <ChevronDown v-if="!isCompletedExpanded" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+            <ChevronUp v-else class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+          </IconButton>
+        </div>
+        <div v-show="isCompletedExpanded" class="flex flex-col gap-1">
+          <TodoList
+            :todos="completedTodos"
+            :quadrant-type="config.type"
+            @update="(id, content) => emit('update', id, content)"
+            @toggle="(id) => emit('toggle', id)"
+            @delete="(id) => emit('delete', id)"
+            @create-next="handleCreateNext"
+            @reorder="handleReorder"
+            @open-document="(id) => emit('openDocument', id)"
+          />
+        </div>
       </div>
     </div>
   </div>
