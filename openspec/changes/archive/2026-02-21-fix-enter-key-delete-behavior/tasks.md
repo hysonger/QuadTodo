@@ -7,6 +7,6 @@
 
 ## 2. Verification
 
-- [ ] 2.1 Test: Create new todo with Enter, press Enter again without typing → should do nothing
-- [ ] 2.2 Test: Create new todo with Enter, type and delete, press Enter → should delete todo
-- [ ] 2.3 Test: Create new todo with Enter, type content, press Enter → should save and create next
+- [x] 2.1 Test: Create new todo with Enter, press Enter again without typing → should do nothing
+- [x] 2.2 Test: Create new todo with Enter, type and delete, press Enter → should delete todo
+- [x] 2.3 Test: Create new todo with Enter, type content, press Enter → should save and create next

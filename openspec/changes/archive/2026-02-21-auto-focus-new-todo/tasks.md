@@ -7,7 +7,7 @@
 - [x] 2.1 Add `isNew` prop to TodoItem component interface
 - [x] 2.2 Add `onMounted` hook to auto-enter edit mode when `isNew` is true
 - [x] 2.3 Ensure `nextTick` is used before focusing input element
-- [ ] 2.4 Clear `isNew` flag after entering edit mode (optional, for cleanup)
+- [x] 2.4 Clear `isNew` flag after entering edit mode (optional, for cleanup)
 
 ## 3. TodoList Component
 

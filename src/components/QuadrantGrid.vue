@@ -23,6 +23,10 @@ const clearTextTodoHasDocument = ref(false)
 
 const newTodoId = ref<string | null>(null)
 
+const clearNewTodoId = () => {
+  newTodoId.value = null
+}
+
 const getTodosWithNewFlag = (type: QuadrantType): Todo[] => {
   const todos = todoStore.getTodosByQuadrant(type)
   if (!newTodoId.value) return todos
@@ -69,12 +73,14 @@ const handleDelete = (id: string) => {
     showDeleteConfirm.value = true
   } else {
     todoStore.deleteTodo(id)
+    clearNewTodoId()
   }
 }
 
 const confirmDelete = async () => {
   if (deleteTodoId.value) {
     await todoStore.deleteTodo(deleteTodoId.value)
+    clearNewTodoId()
   }
   showDeleteConfirm.value = false
   deleteTodoId.value = null
@@ -89,12 +95,14 @@ const handleClearTextDelete = (id: string) => {
     showClearTextConfirm.value = true
   } else {
     todoStore.deleteTodo(id)
+    clearNewTodoId()
   }
 }
 
 const confirmClearText = async () => {
   if (clearTextTodoId.value) {
     await todoStore.deleteTodo(clearTextTodoId.value)
+    clearNewTodoId()
   }
   showClearTextConfirm.value = false
   clearTextTodoId.value = null
@@ -117,6 +125,7 @@ const handleUpdate = (id: string, content: string) => {
   } else {
     todoStore.updateTodoContent(id, content)
   }
+  clearNewTodoId()
 }
 </script>
 
