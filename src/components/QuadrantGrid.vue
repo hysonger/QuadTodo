@@ -72,11 +72,8 @@ const handleDelete = (id: string) => {
   }
 }
 
-const confirmDelete = async (deleteDocument: boolean) => {
+const confirmDelete = async () => {
   if (deleteTodoId.value) {
-    if (deleteDocument) {
-      await todoStore.deleteDocument(deleteTodoId.value)
-    }
     await todoStore.deleteTodo(deleteTodoId.value)
   }
   showDeleteConfirm.value = false
@@ -95,11 +92,8 @@ const handleClearTextDelete = (id: string) => {
   }
 }
 
-const confirmClearText = async (deleteDocument: boolean) => {
+const confirmClearText = async () => {
   if (clearTextTodoId.value) {
-    if (deleteDocument) {
-      await todoStore.deleteDocument(clearTextTodoId.value)
-    }
     await todoStore.deleteTodo(clearTextTodoId.value)
   }
   showClearTextConfirm.value = false
@@ -152,41 +146,23 @@ const handleUpdate = (id: string, content: string) => {
     <ConfirmDialog
       :show="showDeleteConfirm"
       title="删除待办"
-      message="该待办项已关联文档。是否同时删除文档？"
-      confirm-text="仅删除待办"
+      message="该待办项已关联文档，删除待办时文档也将被删除。"
+      confirm-text="确认删除"
       cancel-text="取消"
       variant="danger"
-      @confirm="confirmDelete(false)"
+      @confirm="confirmDelete"
       @cancel="showDeleteConfirm = false"
-    >
-      <template #extra>
-        <button
-          class="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors"
-          @click="confirmDelete(true)"
-        >
-          删除待办和文档
-        </button>
-      </template>
-    </ConfirmDialog>
+    />
 
     <ConfirmDialog
       :show="showClearTextConfirm"
       title="清空待办内容"
-      message="该待办项已关联文档。是否同时删除文档？"
-      confirm-text="仅删除待办"
+      message="该待办项已关联文档，删除待办时文档也将被删除。"
+      confirm-text="确认删除"
       cancel-text="取消"
       variant="danger"
-      @confirm="confirmClearText(false)"
+      @confirm="confirmClearText"
       @cancel="showClearTextConfirm = false"
-    >
-      <template #extra>
-        <button
-          class="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors"
-          @click="confirmClearText(true)"
-        >
-          删除待办和文档
-        </button>
-      </template>
-    </ConfirmDialog>
+    />
   </div>
 </template>

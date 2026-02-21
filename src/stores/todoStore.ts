@@ -134,8 +134,16 @@ export const useTodoStore = defineStore('todos', () => {
   }
 
   const deleteTodo = async (id: string) => {
+    const todo = todos.value.find(t => t.id === id)
     try {
       await todoApi.delete(id)
+      if (todo?.hasDocument) {
+        try {
+          await documentApi.deleteDocument(id)
+        } catch (docErr) {
+          console.error('Failed to delete document:', docErr)
+        }
+      }
       todos.value = todos.value.filter(t => t.id !== id)
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to delete todo'
