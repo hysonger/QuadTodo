@@ -1,14 +1,33 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useSettingsStore } from '@/stores/settingsStore'
-import { ArrowLeft, Save } from 'lucide-vue-next'
+import { useTodoStore } from '@/stores/todoStore'
+import { ArrowLeft, Save, Download, Upload } from 'lucide-vue-next'
+import { exportApi } from '@/api/exportApi'
+import { importApi, type ImportMode } from '@/api/importApi'
+import ImportModeDialog from './ImportModeDialog.vue'
 
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
 const settingsStore = useSettingsStore()
+const todoStore = useTodoStore()
 const sloganInput = ref('')
+
+const showImportDialog = ref(false)
+const isExporting = ref(false)
+const isImporting = ref(false)
+const message = ref('')
+const messageType = ref<'success' | 'error'>('success')
+
+const showMessage = (text: string, type: 'success' | 'error' = 'success') => {
+  message.value = text
+  messageType.value = type
+  setTimeout(() => {
+    message.value = ''
+  }, 3000)
+}
 
 onMounted(() => {
   sloganInput.value = settingsStore.customSlogan
@@ -20,6 +39,38 @@ const handleSave = () => {
 
 const handleClose = () => {
   emit('close')
+}
+
+const handleExport = async () => {
+  isExporting.value = true
+  try {
+    await exportApi.exportAll()
+    showMessage('导出成功', 'success')
+  } catch (error) {
+    console.error('Export failed:', error)
+    showMessage('导出失败: ' + (error as Error).message, 'error')
+  } finally {
+    isExporting.value = false
+  }
+}
+
+const handleImportClick = () => {
+  showImportDialog.value = true
+}
+
+const handleImportModeSelect = async (mode: ImportMode) => {
+  showImportDialog.value = false
+  isImporting.value = true
+  try {
+    const count = await importApi.importAll(mode)
+    await todoStore.fetchTodos()
+    showMessage(`成功导入 ${count} 个待办`, 'success')
+  } catch (error) {
+    console.error('Import failed:', error)
+    showMessage('导入失败: ' + (error as Error).message, 'error')
+  } finally {
+    isImporting.value = false
+  }
 }
 </script>
 
@@ -61,7 +112,48 @@ const handleClose = () => {
             </button>
           </div>
         </div>
+
+        <!-- Data Import/Export Section -->
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+          <h2 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">数据导入导出</h2>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+            导出或导入所有待办数据和关联文档
+          </p>
+          <div class="flex gap-2">
+            <button
+              class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50"
+              :disabled="isExporting"
+              @click="handleExport"
+            >
+              <Download class="w-4 h-4" />
+              {{ isExporting ? '导出中...' : '导出' }}
+            </button>
+            <button
+              class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-sm bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors disabled:opacity-50"
+              :disabled="isImporting"
+              @click="handleImportClick"
+            >
+              <Upload class="w-4 h-4" />
+              {{ isImporting ? '导入中...' : '导入' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Message -->
+      <div
+        v-if="message"
+        class="fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg shadow-lg text-sm text-white"
+        :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'"
+      >
+        {{ message }}
       </div>
     </main>
+
+    <ImportModeDialog
+      :show="showImportDialog"
+      @close="showImportDialog = false"
+      @select="handleImportModeSelect"
+    />
   </div>
 </template>
