@@ -94,7 +94,7 @@ async function createZipBundle(todos: Todo[], documents: Record<string, string>)
 /**
  * 下载 ZIP 文件
  */
-async function downloadZip(blob: Blob, filename: string): Promise<void> {
+async function downloadZip(blob: Blob, filename: string): Promise<boolean> {
   // 转换为 ArrayBuffer
   const arrayBuffer = await blob.arrayBuffer()
   const uint8Array = new Uint8Array(arrayBuffer)
@@ -105,9 +105,13 @@ async function downloadZip(blob: Blob, filename: string): Promise<void> {
     filters: [{ name: 'ZIP Archive', extensions: ['zip'] }],
   })
 
-  if (filePath) {
-    await writeFile(filePath, uint8Array)
+  // 用户取消选择，静默返回
+  if (!filePath) {
+    return false
   }
+
+  await writeFile(filePath, uint8Array)
+  return true
 }
 
 /**
@@ -116,8 +120,9 @@ async function downloadZip(blob: Blob, filename: string): Promise<void> {
 export const exportApi = {
   /**
    * 导出所有待办数据为 ZIP 文件
+   * @returns 是否成功导出，用户取消时返回 false
    */
-  async exportAll(): Promise<void> {
+  async exportAll(): Promise<boolean> {
     try {
       // 收集数据
       const todos = collectTodos()
@@ -134,7 +139,7 @@ export const exportApi = {
       const zipBlob = await createZipBundle(todos, documents)
 
       // 下载
-      await downloadZip(zipBlob, filename)
+      return await downloadZip(zipBlob, filename)
     } catch (error) {
       console.error('Export error:', error)
       const message = error instanceof Error ? error.message : String(error)

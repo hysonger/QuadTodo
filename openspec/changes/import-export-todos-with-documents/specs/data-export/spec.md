@@ -21,6 +21,10 @@ The system SHALL allow users to export all todos and their associated documents 
   - `todos.json` with empty array `[]`
   - Empty `docs/` folder
 
+#### Scenario: Cancel export via dialog
+- **WHEN** user clicks "Export All" button and closes the file save dialog without selecting a location
+- **THEN** system silently cancels the export without showing any error message
+
 ### Requirement: Export file naming
 The exported ZIP file SHALL use a timestamped filename for easy identification.
 

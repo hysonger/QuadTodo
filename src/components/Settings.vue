@@ -44,11 +44,14 @@ const handleClose = () => {
 const handleExport = async () => {
   isExporting.value = true
   try {
-    await exportApi.exportAll()
-    showMessage('导出成功', 'success')
+    const success = await exportApi.exportAll()
+    if (success) {
+      showMessage('导出成功', 'success')
+    }
+    // 用户取消时，静默返回，不显示任何消息
   } catch (error) {
     console.error('Export failed:', error)
-    showMessage('导出失败: ' + (error as Error).message, 'error')
+    showMessage((error as Error).message, 'error')
   } finally {
     isExporting.value = false
   }
@@ -63,11 +66,16 @@ const handleImportModeSelect = async (mode: ImportMode) => {
   isImporting.value = true
   try {
     const count = await importApi.importAll(mode)
+    // 用户取消时，静默返回，不显示任何消息
+    if (count === -1) {
+      isImporting.value = false
+      return
+    }
     await todoStore.fetchTodos()
     showMessage(`成功导入 ${count} 个待办`, 'success')
   } catch (error) {
     console.error('Import failed:', error)
-    showMessage('导入失败: ' + (error as Error).message, 'error')
+    showMessage((error as Error).message, 'error')
   } finally {
     isImporting.value = false
   }
