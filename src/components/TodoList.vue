@@ -18,6 +18,7 @@ const emit = defineEmits<{
   (e: 'createNext', quadrant: QuadrantType): void
   (e: 'reorder', todos: Todo[], isSameQuadrant: boolean): void
   (e: 'openDocument', id: string): void
+  (e: 'create'): void
 }>()
 
 // Local list for draggable (not using v-model to avoid conflicts)
@@ -34,6 +35,10 @@ watch(
 
 const handleCreateNext = () => {
   emit('createNext', props.quadrantType)
+}
+
+const handleCreate = () => {
+  emit('create')
 }
 
 const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?: { newIndex: number; oldIndex: number }; removed?: { element: Todo; oldIndex: number } }) => {
@@ -74,7 +79,8 @@ const handleChange = (evt: { added?: { element: Todo; newIndex: number }; moved?
     <template #footer>
       <div
         v-if="todos.length === 0"
-        class="flex-1 flex items-center justify-center text-gray-300 dark:text-gray-500 text-xs py-4 border border-dashed border-gray-200 dark:border-gray-600 rounded"
+        class="flex-1 flex items-center justify-center text-gray-300 dark:text-gray-500 text-xs py-4 border border-dashed border-gray-200 dark:border-gray-600 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
+        @click="handleCreate"
       >
         拖拽或点击添加
       </div>
