@@ -123,6 +123,7 @@ const handleReorder = (todos: Todo[], isSameQuadrant: boolean = true) => {
           @create-next="handleCreateNext"
           @reorder="handleReorder"
           @open-document="(id) => emit('openDocument', id)"
+          @create="handleCreate"
         />
       </div>
 

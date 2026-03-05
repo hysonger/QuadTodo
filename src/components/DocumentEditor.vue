@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+
+const STORAGE_KEY = 'quad-todo-editor-view-mode'
+const VALID_MODES = ['edit', 'preview', 'split'] as const
+
 import { useTodoStore } from '@/stores/todoStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { X, Eye, Columns, Loader2, Check } from 'lucide-vue-next'
@@ -82,6 +86,7 @@ const handleChange = (value: string) => {
 
 const setViewMode = (mode: 'edit' | 'preview' | 'split') => {
   viewMode.value = mode
+  localStorage.setItem(STORAGE_KEY, mode)
 }
 
 const handleClose = () => {
@@ -89,6 +94,10 @@ const handleClose = () => {
 }
 
 onMounted(() => {
+  const savedMode = localStorage.getItem(STORAGE_KEY)
+  if (savedMode && VALID_MODES.includes(savedMode as typeof VALID_MODES[number])) {
+    viewMode.value = savedMode as 'edit' | 'preview' | 'split'
+  }
   loadDocument()
 })
 </script>
