@@ -13,6 +13,7 @@ import { Codemirror } from 'vue-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { oneDark } from '@codemirror/theme-one-dark'
 import type { Extension } from '@codemirror/state'
+import { openUrl } from '@tauri-apps/plugin-opener'
 
 interface Props {
   todoId: string
@@ -91,6 +92,22 @@ const setViewMode = (mode: 'edit' | 'preview' | 'split') => {
 
 const handleClose = () => {
   emit('close')
+}
+
+const handlePreviewClick = async (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  const link = target.closest('a')
+  if (link) {
+    event.preventDefault()
+    const href = link.getAttribute('href')
+    if (href) {
+      try {
+        await openUrl(href)
+      } catch (err) {
+        console.error('Failed to open URL:', err)
+      }
+    }
+  }
 }
 
 onMounted(() => {
@@ -189,6 +206,7 @@ onMounted(() => {
             v-if="viewMode === 'preview' || viewMode === 'split'"
             class="overflow-y-auto bg-white dark:bg-gray-900"
             :class="viewMode === 'split' ? 'w-1/2' : 'w-full'"
+            @click="handlePreviewClick"
           >
             <div
               class="p-4 prose prose-sm dark:prose-invert max-w-none"
