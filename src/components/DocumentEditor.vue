@@ -13,6 +13,7 @@ import { Codemirror } from 'vue-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { oneDark } from '@codemirror/theme-one-dark'
 import type { Extension } from '@codemirror/state'
+import { EditorView } from '@codemirror/view'
 import { openUrl } from '@tauri-apps/plugin-opener'
 
 interface Props {
@@ -41,7 +42,26 @@ const renderedContent = computed(() => {
 })
 
 const extensions = computed(() => {
-  const exts: Extension[] = [markdown()]
+  const exts: Extension[] = [
+    markdown(),
+    EditorView.domEventHandlers({
+      click: (event) => {
+        const target = event.target as HTMLElement
+        const link = target.closest('a')
+        if (link) {
+          event.preventDefault()
+          const href = link.getAttribute('href')
+          if (href) {
+            openUrl(href).catch(err => {
+              console.error('Failed to open URL:', err)
+            })
+          }
+          return true
+        }
+        return false
+      }
+    })
+  ]
   if (settingsStore.isDarkMode) {
     exts.push(oneDark)
   }
