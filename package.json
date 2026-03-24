@@ -27,6 +27,7 @@
     "@tauri-apps/api": "^2.0.0",
     "@tauri-apps/plugin-dialog": "^2.6.0",
     "@tauri-apps/plugin-fs": "^2.4.5",
+    "@tauri-apps/plugin-opener": "^2.2.0",
     "@vueuse/core": "^12.7.0",
     "jszip": "^3.10.1",
     "lucide-vue-next": "^0.475.0",
